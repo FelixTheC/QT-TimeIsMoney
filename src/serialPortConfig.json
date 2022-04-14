@@ -1,0 +1,4 @@
+{
+    "Port": "/dev/ttyUSB0",
+    "Baudrate": 9600
+}
