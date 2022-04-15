@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "tasklist.h"
 #include "ui_mainwindow.h"
 
 #include <QDialog>
@@ -193,3 +194,11 @@ MainWindow::newTaskDialog()
     widget->setModal(true);
     widget->show();
 }
+
+void MainWindow::on_actionOverview_triggered()
+{
+    TaskList *taskList = new TaskList();
+    taskList->setModal(true);
+    taskList->show();
+}
+

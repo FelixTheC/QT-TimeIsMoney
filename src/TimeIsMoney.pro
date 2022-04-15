@@ -13,14 +13,16 @@ SOURCES += \
     mainwindow.cpp \
     serialreader.cpp \
     task.cpp \
-    taskdb.cpp
+    taskdb.cpp \
+    tasklist.cpp
 
 HEADERS += \
     mainwindow.h \
     serialreader.h \
     serialreader_utils.h \
     task.h \
-    taskdb.h
+    taskdb.h \
+    tasklist.h
 
 FORMS += \
     mainwindow.ui

@@ -30,6 +30,8 @@ private slots:
     void taskinfo_changed();
     void closeEvent(QCloseEvent *event);
 
+    void on_actionOverview_triggered();
+
 private:
     Ui::MainWindow *ui;
     void newTaskDialog();
