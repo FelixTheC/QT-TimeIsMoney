@@ -59,8 +59,6 @@ SerialReader::readSerial()
 
     if (fileDescriptor == -1)
     {
-        auto txt = "open_port: Unable to open " + filePath;
-        qWarning(QString::fromStdString(txt).toStdString().c_str());
         return "";
     }
     else

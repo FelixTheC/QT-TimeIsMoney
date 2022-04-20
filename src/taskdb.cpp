@@ -12,7 +12,6 @@ TaskDB::TaskDB()
     }
     else
     {
-        qDebug() << "Connection established";
         QSqlQuery query;
         query.exec("create table if not exists tasks"
                    "("
@@ -43,7 +42,6 @@ TaskDB::TaskDB()
                    );");
 
         query.exec("create unique index invoice_settings_id_uindex on invoice_settings (id);");
-        qDebug() << query.lastError().text();
     }
 }
 
