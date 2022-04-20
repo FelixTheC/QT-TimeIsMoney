@@ -31,9 +31,9 @@ void init_interrupt(void)
 	EXTI->IMR |= (1<<9);			// unmask EXTI9
 
 
-	// select falling edge trigger
-	EXTI->FTSR |= (1<<0);
-	EXTI->FTSR |= (1<<9);
+	// select rising edge trigger
+	EXTI->RTSR |= (1<<0);
+	EXTI->RTSR |= (1<<9);
 
 	NVIC_EnableIRQ(EXTI0_IRQn);
 	NVIC_EnableIRQ(EXTI9_5_IRQn);
@@ -105,7 +105,7 @@ int main(void)
 
 	while(1)
 	{
-		printf("$ftc-stream$\r\n");
+		printf("§$&\r\n");
 	}
 
 	return 0;
