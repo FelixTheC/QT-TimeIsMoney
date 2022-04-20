@@ -18,6 +18,7 @@ class SerialReader : public QWidget
 
 public:
     SerialReader();
+    SerialReader(const std::string &path);
     ~SerialReader();
 
     void setBaudRate(const unsigned int &rate) noexcept;

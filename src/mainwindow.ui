@@ -143,7 +143,17 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <widget class="QMenu" name="menuUSB">
+     <property name="title">
+      <string>USB</string>
+     </property>
+     <addaction name="actionPort"/>
+    </widget>
+    <addaction name="menuUSB"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
     <addaction name="actionOverview"/>
+    <addaction name="actionCreate_Invoice"/>
    </widget>
    <addaction name="menuOptions"/>
   </widget>
@@ -151,6 +161,16 @@
   <action name="actionOverview">
    <property name="text">
     <string>Overview</string>
+   </property>
+  </action>
+  <action name="actionCreate_Invoice">
+   <property name="text">
+    <string>Create Invoice</string>
+   </property>
+  </action>
+  <action name="actionPort">
+   <property name="text">
+    <string>Port</string>
    </property>
   </action>
  </widget>

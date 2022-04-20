@@ -13,7 +13,7 @@
 class Task
 {
 public:
-    Task();
+    Task(QSqlDatabase *database);
     double totalTime() noexcept;
     double totalPrice() noexcept;
     double priceUntilNow() noexcept;
@@ -26,7 +26,7 @@ public:
     QString getTaskName() noexcept;
     QString getCreatedAt() noexcept;
 
-    static bool getLastRecord(QString &client, QString &task, QString &price);
+    static bool getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase *database);
 
 private:
     std::string clientName;
@@ -37,6 +37,7 @@ private:
     float pricePerHour;
     bool isRunning = false;
     bool writeTaskToDb();
+    QSqlDatabase *database;
 };
 
 #endif // TASK_H

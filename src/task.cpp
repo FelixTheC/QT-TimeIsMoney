@@ -11,8 +11,9 @@ namespace Time {
 }
 
 
-Task::Task()
+Task::Task(QSqlDatabase *database)
 {
+    this->database = database;
 }
 
 void
@@ -101,12 +102,8 @@ Task::getCreatedAt() noexcept
 
 bool Task::writeTaskToDb()
 {
-    auto taskDb = TaskDB();
-
-    if (taskDb.getDB().isOpen())
+    if (database->isOpen())
     {
-        qDebug() << "Prepare Query";
-
         QSqlQuery query;
         query.prepare("INSERT INTO tasks (client, task, price_per_hour, probono, created_at, closed_at) "
                       "VALUES(:client, :task, :pph, :probono, :created, :closed)");
@@ -116,24 +113,20 @@ bool Task::writeTaskToDb()
         query.bindValue(":probono", probono);
         query.bindValue(":created", createdAt);
         query.bindValue(":closed", closedAt);
-        auto result = query.exec();
-        qDebug() << query.lastError().text() << query.lastError().databaseText();
-        return result;
+
+        return query.exec();
     }
     return false;
 }
 
 bool
-Task::getLastRecord(QString &client, QString &task, QString &price)
+Task::getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase *database)
 {
-    auto taskDb = TaskDB();
-    if (taskDb.getDB().isOpen())
+    if (database->isOpen())
     {
-        qDebug() << "Prepare Query";
 
         QSqlQuery query;
         auto result = query.exec("SELECT * FROM tasks ORDER BY closed_at DESC LIMIT 1;");
-        qDebug() << query.lastError().text() << query.lastError().databaseText();
         query.next();
         client = query.value(1).toString();
         task = query.value(2).toString();

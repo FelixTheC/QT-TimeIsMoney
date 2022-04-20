@@ -10,6 +10,13 @@ SerialReader::SerialReader()
     fileDescriptor = open(filePath.c_str(), O_RDONLY | O_NOCTTY | O_NDELAY);
 }
 
+SerialReader::SerialReader(const std::string &path)
+{
+    filePath = path;
+    options.c_cflag |= (CLOCAL | CREAD);
+    fileDescriptor = open(filePath.c_str(), O_RDONLY | O_NOCTTY | O_NDELAY);
+}
+
 SerialReader::~SerialReader()
 {
     fileDescriptor = cserial::cclose(fileDescriptor);
@@ -52,7 +59,8 @@ SerialReader::readSerial()
 
     if (fileDescriptor == -1)
     {
-        //qWarning("open_port: Unable to open /dev/ttyACM0 - ");
+        auto txt = "open_port: Unable to open " + filePath;
+        qWarning(QString::fromStdString(txt).toStdString().c_str());
         return "";
     }
     else

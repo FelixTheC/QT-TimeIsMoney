@@ -16,7 +16,7 @@ class TaskList : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TaskList(QDialog *parent = nullptr);
+    explicit TaskList(QSqlDatabase *database, QDialog *parent = nullptr);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -24,7 +24,7 @@ protected:
 private:
     QTableView *table;
     QSqlTableModel *model;
-    QSqlDatabase db;
+    QSqlDatabase *db;
 
     QString clientSearch = "";
     QString taskSearch = "";

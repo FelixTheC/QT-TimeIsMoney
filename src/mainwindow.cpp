@@ -1,3 +1,4 @@
+#include "invoice.h"
 #include "mainwindow.h"
 #include "tasklist.h"
 #include "ui_mainwindow.h"
@@ -10,37 +11,44 @@
 #include <QPushButton>
 #include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    timer = new QTimer(this);
+    this->database = database;
+    initSerialReader();
+
     infoTimer = new QTimer(this);
-    serialReader = new SerialReader();
-    connect(timer, &QTimer::timeout, serialReader, &SerialReader::getSerialValue);
     connect(infoTimer, &QTimer::timeout, this, &MainWindow::taskinfo_changed);
-    connect(serialReader, &SerialReader::serialValueReceived, this, &MainWindow::runCmd);
-    timer->start(100);
     infoTimer->start(60000);
 }
 
 MainWindow::~MainWindow()
 {
-    timer->stop();
+    serialTimer->stop();
     infoTimer->stop();
 
-    free(timer);
+    free(serialTimer);
     free(infoTimer);
     free(serialReader);
+    free(database);
     if (currentTask != nullptr)
         free(currentTask);
 
     delete ui;
 }
 
-
+void
+MainWindow::initSerialReader()
+{
+    serialReader = new SerialReader(usbPort.toStdString());
+    serialTimer = new QTimer(this);
+    connect(serialTimer, &QTimer::timeout, serialReader, &SerialReader::getSerialValue);
+    connect(serialReader, &SerialReader::serialValueReceived, this, &MainWindow::runCmd);
+    serialTimer->start(100);
+}
 
 void
 MainWindow::runCmd(const std::string &val)
@@ -51,7 +59,7 @@ MainWindow::runCmd(const std::string &val)
         {
             if (currentTask == nullptr)
             {
-                currentTask = new Task();
+                currentTask = new Task(database);
                 newTaskDialog();
             }
         }
@@ -143,7 +151,7 @@ MainWindow::newTaskDialog()
     QString lastTask = "";
     QString lastPrice = "";
 
-    Task::getLastRecord(lastClient, lastTask, lastPrice);
+    Task::getLastRecord(lastClient, lastTask, lastPrice, database);
     currentTask->setClientName(lastClient.toStdString());
     currentTask->setTaskName(lastTask.toStdString());
     currentTask->setPricePerHour(lastPrice.toFloat());
@@ -195,10 +203,63 @@ MainWindow::newTaskDialog()
     widget->show();
 }
 
-void MainWindow::on_actionOverview_triggered()
+void
+MainWindow::on_actionOverview_triggered()
 {
-    TaskList *taskList = new TaskList();
+    TaskList *taskList = new TaskList(database);
     taskList->setModal(true);
     taskList->show();
+}
+
+
+void
+MainWindow::on_actionCreate_Invoice_triggered()
+{
+    Invoice *invoiceView = new Invoice(database, this);
+    invoiceView->show();
+}
+
+
+void
+MainWindow::on_actionPort_triggered()
+{
+    auto *dialog = new QDialog(this);
+    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    auto *label = new QLabel(dialog);
+    label->setText("Client:");
+    auto *edit = new QLineEdit(dialog);
+    edit->setText(usbPort);
+
+    auto *hLayout = new QHBoxLayout();
+    hLayout->addWidget(label);
+    hLayout->addWidget(edit);
+
+    auto *boxLayout = new QBoxLayout(QBoxLayout::TopToBottom, dialog);
+    boxLayout->addLayout(hLayout);
+    boxLayout->addWidget(buttonBox);
+
+
+    connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+    connect(edit, &QLineEdit::textChanged, this, &MainWindow::usbPort_Changed);
+    connect(dialog, &QDialog::accepted, this, &MainWindow::usbPort_ChangeDialogClosed);
+
+    dialog->setModal(true);
+    dialog->show();
+}
+
+void
+MainWindow::usbPort_Changed(const QString &val)
+{
+    usbPort = val;
+}
+
+void MainWindow::usbPort_ChangeDialogClosed()
+{
+    serialTimer->stop();
+    qDebug() << "usbPort: " << usbPort;
+
+    initSerialReader();
 }
 

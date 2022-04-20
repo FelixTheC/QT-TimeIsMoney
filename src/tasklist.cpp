@@ -1,11 +1,10 @@
 #include "tasklist.h"
 
 
-TaskList::TaskList(QDialog *parent)
+TaskList::TaskList(QSqlDatabase *database, QDialog *parent)
     : QDialog{parent}
 {
-    auto taskDb = TaskDB();
-    db = taskDb.getDB();
+    db = database;
 
     auto *clientLabel = new QLabel(this);
     clientLabel->setText("Client:");
@@ -65,7 +64,7 @@ TaskList::resizeEvent(QResizeEvent *)
 void
 TaskList::initModel()
 {
-    model = new QSqlTableModel(nullptr, db);
+    model = new QSqlTableModel(nullptr, *db);
     model->setTable("tasks");
     model->setSort(6, Qt::DescendingOrder);
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("Id"));
@@ -91,7 +90,7 @@ TaskList::initTable()
 void
 TaskList::filter_changed()
 {
-    db.open();
+    db->open();
     QString query = "";
     if (!clientSearch.isEmpty())
         query += QString("client LIKE '%%1%'").arg(clientSearch);
@@ -108,7 +107,7 @@ TaskList::filter_changed()
         model->setFilter(query);
 
     model->select();
-    db.close();
+    db->close();
 }
 
 void

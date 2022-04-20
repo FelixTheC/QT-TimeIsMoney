@@ -14,9 +14,10 @@ public:
     TaskDB();
     ~TaskDB();
     QSqlDatabase getDB();
+    QSqlDatabase *getDBPtr();
 
 private:
-    QSqlDatabase task_db;
+    QSqlDatabase *task_db;
 };
 
 #endif // TASKDB_H

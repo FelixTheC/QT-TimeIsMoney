@@ -3,6 +3,7 @@
 
 #include "serialreader.h"
 #include "task.h"
+#include "taskdb.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -17,7 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QSqlDatabase *database, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -29,15 +30,24 @@ private slots:
     void price_changed(const QString &val);
     void taskinfo_changed();
     void closeEvent(QCloseEvent *event);
+    void usbPort_Changed(const QString &val);
+    void usbPort_ChangeDialogClosed();
 
     void on_actionOverview_triggered();
+    void on_actionCreate_Invoice_triggered();
+    void on_actionPort_triggered();
+
 
 private:
     Ui::MainWindow *ui;
     void newTaskDialog();
     Task *currentTask = nullptr;
-    QTimer *timer;
+    QTimer *serialTimer;
     QTimer *infoTimer;
     SerialReader *serialReader;
+    QSqlDatabase *database;
+    QString usbPort = "/dev/ttyACM0";
+
+    void initSerialReader();
 };
 #endif // MAINWINDOW_H

@@ -2,10 +2,11 @@
 
 TaskDB::TaskDB()
 {
-    task_db = QSqlDatabase::addDatabase("QSQLITE");
-    task_db.setDatabaseName("taskdata.db3");
+    auto db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("taskdata.db3");
+    task_db = new QSqlDatabase(db);
 
-    if (!task_db.open())
+    if (!task_db->open())
     {
         qWarning("Connection error: No connection to DB.");
     }
@@ -28,18 +29,37 @@ TaskDB::TaskDB()
         query.exec("create index tasks_closed_at_index on tasks (closed_at desc);");
         query.exec("create index tasks_created_at_index on tasks (created_at);");
         query.exec("create unique index tasks_id_uindex on tasks (id);");
+        query.exec("create table invoice_settings\
+            (\
+                id integer not null\
+                    constraint invoice_settings_pk\
+                        primary key autoincrement,\
+                tax double,\
+                user_currency varchar(10),\
+                client_currency varchar(10),\
+                exchange_rate double,\
+                header text,\
+                footer text\
+                   );");
+
+        query.exec("create unique index invoice_settings_id_uindex on invoice_settings (id);");
         qDebug() << query.lastError().text();
     }
 }
 
 TaskDB::~TaskDB()
 {
-    qDebug() << "Connection closed";
-    task_db.close();
+    task_db->close();
 }
 
 QSqlDatabase
 TaskDB::getDB()
+{
+    return *task_db;
+}
+
+QSqlDatabase
+*TaskDB::getDBPtr()
 {
     return task_db;
 }
