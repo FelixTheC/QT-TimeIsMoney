@@ -235,7 +235,6 @@ Invoice::save_invoice_settings()
     query.bindValue(":header", ui->textEdit_header->toHtml());
     query.bindValue(":footer", ui->textEdit_footer->toHtml());
     query.exec();
-    qDebug() << query.lastError().databaseText();
 
     database->close();
 }

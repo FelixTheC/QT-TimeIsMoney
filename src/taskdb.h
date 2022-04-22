@@ -2,7 +2,6 @@
 #define TASKDB_H
 
 #include <QSqlDatabase>
-#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 

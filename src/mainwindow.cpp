@@ -88,6 +88,12 @@ MainWindow::cancelTask()
         this->currentTask = nullptr;
         taskinfo_changed();
     }
+    else if (currentTask != nullptr)
+    {
+        free(this->currentTask);
+        this->currentTask = nullptr;
+        taskinfo_changed();
+    }
 }
 
 void
@@ -198,6 +204,7 @@ MainWindow::newTaskDialog()
     connect(taskField, &QLineEdit::textEdited, this, &MainWindow::taskname_changed);
     connect(priceField, &QLineEdit::textEdited, this, &MainWindow::price_changed);
     connect(widget, &QDialog::accepted, this, &MainWindow::startTask);
+    connect(widget, &QDialog::rejected, this, &MainWindow::cancelTask);
 
     widget->setModal(true);
     widget->show();
@@ -258,8 +265,6 @@ MainWindow::usbPort_Changed(const QString &val)
 void MainWindow::usbPort_ChangeDialogClosed()
 {
     serialTimer->stop();
-    qDebug() << "usbPort: " << usbPort;
-
     initSerialReader();
 }
 

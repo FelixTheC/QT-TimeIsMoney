@@ -1,6 +1,5 @@
 #include "serialreader.h"
 #include "serialreader_utils.h"
-#include <QDebug>
 #include <QString>
 
 
@@ -75,6 +74,7 @@ SerialReader::readSerial()
         while (result < SIZE_MAX)
         {
             result = read(fileDescriptor, &buf, sizeof(buf) - 1);
+
             if (result == 37)  // 36 + 1 newline char @TODO must be a const variable
             {
                 text = buf;
