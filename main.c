@@ -105,7 +105,7 @@ int main(void)
 
 	while(1)
 	{
-		printf("§$&\r\n");
+		// printf("§$&\r\n");
 	}
 
 	return 0;
