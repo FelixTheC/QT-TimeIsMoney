@@ -268,15 +268,32 @@ void MainWindow::usbPort_ChangeDialogClosed()
     initSerialReader();
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_startTaskBtn_clicked()
 {
     runCmd(start_UUID);
 }
 
-
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_stopTaskBtn_clicked()
 {
     runCmd(end_UUID);
 }
 
+
+void MainWindow::on_actionInfo_triggered()
+{
+    QFile file(":/info.txt");
+    file.open(QFile::ReadOnly | QFile::Text);
+
+    auto *dialog = new QDialog(this);
+    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+    auto *textBrowser = new QTextBrowser(dialog);
+    textBrowser->setText(file.readAll());
+
+    auto *boxLayout = new QBoxLayout(QBoxLayout::TopToBottom, dialog);
+    boxLayout->addWidget(textBrowser);
+    boxLayout->addWidget(buttonBox);
+
+    connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+    dialog->setModal(true);
+    dialog->show();
+}

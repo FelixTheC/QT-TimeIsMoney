@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QTextBrowser>
 
 
 QT_BEGIN_NAMESPACE
@@ -36,8 +37,9 @@ private slots:
     void on_actionOverview_triggered();
     void on_actionCreate_Invoice_triggered();
     void on_actionPort_triggered();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_actionInfo_triggered();
+    void on_startTaskBtn_clicked();
+    void on_stopTaskBtn_clicked();
 
 private:
     Ui::MainWindow *ui;
