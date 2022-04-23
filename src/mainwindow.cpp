@@ -55,7 +55,7 @@ MainWindow::runCmd(const std::string &val)
 {
     if (val.length() > 0)
     {
-        if (val.find("d3b3ecc2-ced7-461a-ac96-04f6d99d9d34") != std::string::npos)
+        if (val.find(start_UUID) != std::string::npos)
         {
             if (currentTask == nullptr)
             {
@@ -64,7 +64,7 @@ MainWindow::runCmd(const std::string &val)
             }
         }
 
-        if (val.find("2e11f26e-d155-42d7-be96-d8dec1e6c69e") != std::string::npos)
+        if (val.find(end_UUID) != std::string::npos)
         {
             cancelTask();
         }
@@ -266,5 +266,17 @@ void MainWindow::usbPort_ChangeDialogClosed()
 {
     serialTimer->stop();
     initSerialReader();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    runCmd(start_UUID);
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    runCmd(end_UUID);
 }
 
