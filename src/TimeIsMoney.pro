@@ -27,7 +27,6 @@ HEADERS += \
     mainwindow.h \
     serialoptions.h \
     serialreader_qt.h \
-    serialreader_utils.h \
     task.h \
     taskdb.h \
     tasklist.h
