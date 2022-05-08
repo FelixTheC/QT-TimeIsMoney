@@ -43,8 +43,6 @@ private slots:
     void on_startTaskBtn_clicked();
     void on_stopTaskBtn_clicked();
 
-    void exec_plugin();
-
 private:
     Ui::MainWindow *ui;
     void newTaskDialog();
