@@ -16,6 +16,7 @@ MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->progressBar->setVisible(false);
 
     this->database = database;
     initSerialReader();
@@ -43,7 +44,7 @@ MainWindow::~MainWindow()
 void
 MainWindow::initSerialReader()
 {
-    serialReaderQt = new SerialReader_QT();
+    serialReaderQt = new SerialReader_QT(SerialOptions::getFirstPortName());
     connect(serialReaderQt, &SerialReader_QT::serialValueReceived, this, &MainWindow::runCmd);
 
     if (serialOptions != nullptr)
@@ -66,7 +67,12 @@ MainWindow::runCmd(const std::string &val)
 
         if (val.find(end_UUID) != std::string::npos)
         {
-            cancelTask();
+            --remaing_stop_calls;
+            if (remaing_stop_calls <=0)
+            {
+                cancelTask();
+                remaing_stop_calls = 3;
+            }
         }
     }
 }
@@ -75,6 +81,8 @@ void
 MainWindow::startTask()
 {
     this->currentTask->startTask();
+    ui->progressBar->setVisible(true);
+    progress_value = -1;
     taskinfo_changed();
 }
 
@@ -94,6 +102,10 @@ MainWindow::cancelTask()
         this->currentTask = nullptr;
         taskinfo_changed();
     }
+
+    ui->progressBar->setVisible(true);
+    progress_value = 0;
+    running_hours = 0;
 }
 
 void
@@ -145,6 +157,28 @@ MainWindow::taskinfo_changed()
         this->ui->label_taskstarted->setText(currentTask->getCreatedAt());
         auto price = currentTask->priceUntilNow();
         this->ui->label_moneyearned->setText(QString::number(price));
+    }
+
+    /*
+     * reset stop_calls if required
+     * if a user hit's the 2 times button maybe by accident then
+     * we will reset the value in our clock cycle
+     * to avoid a real stop call after only one push
+     */
+    if (remaing_stop_calls != 3)
+        remaing_stop_calls = 3;
+
+    if (ui->progressBar->isVisible())
+    {
+        ++progress_value;
+        if (progress_value > 60)
+        {
+            progress_value = 0;
+            ++running_hours;
+            ui->progressBar->setFormat(QString::number(running_hours) + "h %vmin");
+        }
+
+        ui->progressBar->setValue(progress_value);
     }
 
 }
@@ -256,7 +290,7 @@ MainWindow::on_startTaskBtn_clicked()
 void
 MainWindow::on_stopTaskBtn_clicked()
 {
-    runCmd(end_UUID);
+    cancelTask();
 }
 
 
