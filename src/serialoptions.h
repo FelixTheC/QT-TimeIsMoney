@@ -17,9 +17,11 @@ class SerialOptions : public QDialog
 public:
     explicit SerialOptions(QWidget *parent = nullptr);
     ~SerialOptions();
+    static QString getFirstPortName();
 
 signals:
     void baudrateChanged(qint64 &new_rate);
+
 
 private slots:
     void handle_accepted();

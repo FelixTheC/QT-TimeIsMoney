@@ -18,6 +18,13 @@ SerialOptions::~SerialOptions()
     delete ui;
 }
 
+
+QString
+SerialOptions::getFirstPortName()
+{
+    return QSerialPortInfo::availablePorts()[0].portName();
+}
+
 void
 SerialOptions::initPortOptions()
 {

@@ -3,9 +3,24 @@
 
 SerialReader_QT::SerialReader_QT()
 {
-    auto port_info = QSerialPortInfo(usb_port);
+    initSerialReading();
+}
 
-    serial_port = new QSerialPort("ttyACM0");
+SerialReader_QT::SerialReader_QT(const QString &port_name)
+{
+    usb_port = port_name;
+    initSerialReading();
+}
+
+SerialReader_QT::~SerialReader_QT()
+{
+    serial_port->close();
+}
+
+void
+SerialReader_QT::initSerialReading()
+{
+    serial_port = new QSerialPort(usb_port);
 
     connect(serial_port, &QSerialPort::readyRead, this, &SerialReader_QT::read_line);
 
@@ -17,21 +32,16 @@ SerialReader_QT::SerialReader_QT()
     }
 }
 
-SerialReader_QT::~SerialReader_QT()
-{
-    serial_port->close();
-}
-
 void
 SerialReader_QT::read_line()
 {
     received_uuid.append(serial_port->read(8));
     std::string uuid = received_uuid.toStdString();
+
     if (uuid.size() == 36)
-    {
         emit serialValueReceived(uuid);
-    }
-    if (uuid.size() == 37)
+
+    if (uuid.size() >= 37)
         received_uuid.clear();
 }
 

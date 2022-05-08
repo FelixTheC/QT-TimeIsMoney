@@ -12,6 +12,7 @@ class SerialReader_QT : public QWidget
 
 public:
     SerialReader_QT();
+    SerialReader_QT(const QString &port_name);
     ~SerialReader_QT();
 
 Q_SIGNALS:
@@ -22,9 +23,10 @@ public Q_SLOTS:
     void changeBaudrate(qint64 &val);
 
 private:
-    QString usb_port = "/dev/ttyACM0";
+    QString usb_port = "ttyACM0";
     QSerialPort *serial_port;
     QByteArray received_uuid = QByteArray();
+    void initSerialReading();
 };
 
 #endif // SERIALREADER_QT_H
