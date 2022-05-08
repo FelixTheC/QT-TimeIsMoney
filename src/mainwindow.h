@@ -2,8 +2,10 @@
 #define MAINWINDOW_H
 
 #include "serialreader.h"
+#include "serialoptions.h"
 #include "task.h"
 #include "taskdb.h"
+#include "serialreader_qt.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -41,13 +43,16 @@ private slots:
     void on_startTaskBtn_clicked();
     void on_stopTaskBtn_clicked();
 
+    void exec_plugin();
+
 private:
     Ui::MainWindow *ui;
     void newTaskDialog();
     Task *currentTask = nullptr;
     QTimer *serialTimer;
     QTimer *infoTimer;
-    SerialReader *serialReader;
+    SerialReader_QT *serialReaderQt;
+    SerialOptions *serialOptions;
     QSqlDatabase *database;
     QString usbPort = "/dev/ttyACM0";
     std::string start_UUID = "d3b3ecc2-ced7-461a-ac96-04f6d99d9d34";

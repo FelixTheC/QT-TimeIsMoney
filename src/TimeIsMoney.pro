@@ -1,4 +1,8 @@
-QT       += core gui sql printsupport
+QT       += core \
+            gui \
+            sql \
+            printsupport \
+            serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,7 +16,8 @@ SOURCES += \
     invoice.cpp \
     main.cpp \
     mainwindow.cpp \
-    serialreader.cpp \
+    serialoptions.cpp \
+    serialreader_qt.cpp \
     task.cpp \
     taskdb.cpp \
     tasklist.cpp
@@ -20,7 +25,8 @@ SOURCES += \
 HEADERS += \
     invoice.h \
     mainwindow.h \
-    serialreader.h \
+    serialoptions.h \
+    serialreader_qt.h \
     serialreader_utils.h \
     task.h \
     taskdb.h \
@@ -28,7 +34,8 @@ HEADERS += \
 
 FORMS += \
     invoice.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    serialoptions.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

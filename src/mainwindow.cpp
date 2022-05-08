@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
 
     free(serialTimer);
     free(infoTimer);
-    free(serialReader);
+    free(serialReaderQt);
     free(database);
     if (currentTask != nullptr)
         free(currentTask);
@@ -43,11 +43,11 @@ MainWindow::~MainWindow()
 void
 MainWindow::initSerialReader()
 {
-    serialReader = new SerialReader(usbPort.toStdString());
-    serialTimer = new QTimer(this);
-    connect(serialTimer, &QTimer::timeout, serialReader, &SerialReader::getSerialValue);
-    connect(serialReader, &SerialReader::serialValueReceived, this, &MainWindow::runCmd);
-    serialTimer->start(100);
+    serialReaderQt = new SerialReader_QT();
+    connect(serialReaderQt, &SerialReader_QT::serialValueReceived, this, &MainWindow::runCmd);
+
+    if (serialOptions != nullptr)
+        connect(serialOptions, &SerialOptions::baudrateChanged, serialReaderQt, &SerialReader_QT::changeBaudrate);
 }
 
 void
@@ -230,30 +230,8 @@ MainWindow::on_actionCreate_Invoice_triggered()
 void
 MainWindow::on_actionPort_triggered()
 {
-    auto *dialog = new QDialog(this);
-    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-    auto *label = new QLabel(dialog);
-    label->setText("Client:");
-    auto *edit = new QLineEdit(dialog);
-    edit->setText(usbPort);
-
-    auto *hLayout = new QHBoxLayout();
-    hLayout->addWidget(label);
-    hLayout->addWidget(edit);
-
-    auto *boxLayout = new QBoxLayout(QBoxLayout::TopToBottom, dialog);
-    boxLayout->addLayout(hLayout);
-    boxLayout->addWidget(buttonBox);
-
-
-    connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    connect(edit, &QLineEdit::textChanged, this, &MainWindow::usbPort_Changed);
-    connect(dialog, &QDialog::accepted, this, &MainWindow::usbPort_ChangeDialogClosed);
-
-    dialog->setModal(true);
-    dialog->show();
+    serialOptions = new SerialOptions(this);
+    serialOptions->show();
 }
 
 void
@@ -262,24 +240,28 @@ MainWindow::usbPort_Changed(const QString &val)
     usbPort = val;
 }
 
-void MainWindow::usbPort_ChangeDialogClosed()
+void
+MainWindow::usbPort_ChangeDialogClosed()
 {
     serialTimer->stop();
     initSerialReader();
 }
 
-void MainWindow::on_startTaskBtn_clicked()
+void
+MainWindow::on_startTaskBtn_clicked()
 {
     runCmd(start_UUID);
 }
 
-void MainWindow::on_stopTaskBtn_clicked()
+void
+MainWindow::on_stopTaskBtn_clicked()
 {
     runCmd(end_UUID);
 }
 
 
-void MainWindow::on_actionInfo_triggered()
+void
+MainWindow::on_actionInfo_triggered()
 {
     QFile file(":/info.txt");
     file.open(QFile::ReadOnly | QFile::Text);
