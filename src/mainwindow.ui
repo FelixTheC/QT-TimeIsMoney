@@ -174,7 +174,7 @@
      <number>60</number>
     </property>
     <property name="value">
-     <number>25</number>
+     <number>0</number>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

@@ -103,7 +103,7 @@ MainWindow::cancelTask()
         taskinfo_changed();
     }
 
-    ui->progressBar->setVisible(true);
+    ui->progressBar->setVisible(false);
     progress_value = 0;
     running_hours = 0;
 }
