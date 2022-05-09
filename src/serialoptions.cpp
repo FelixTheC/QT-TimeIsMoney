@@ -8,6 +8,7 @@ SerialOptions::SerialOptions(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SerialOptions::handle_accepted);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SerialOptions::close);
+    connect(ui->comboBox, &QComboBox::currentTextChanged, this, &SerialOptions::handlePortChanged);
 
     initPortOptions();
     initBaudRateOptions();
@@ -34,6 +35,15 @@ SerialOptions::initPortOptions()
                   [&](const QSerialPortInfo &portInfo){
                      ui->comboBox->addItem(portInfo.portName());
                   });
+    if (selected_port_name.isEmpty())
+    {
+        selected_port_name = availablePorts[0].portName();
+    }
+    else
+    {
+        auto text_index = ui->comboBox->findText(selected_port_name);
+        ui->comboBox->setCurrentIndex(text_index);
+    }
 }
 
 void
@@ -67,4 +77,11 @@ SerialOptions::handle_accepted()
         user_baudrate = new_rate;
         emit baudrateChanged(new_rate);
     }
+}
+
+void
+SerialOptions::handlePortChanged(const QString &val)
+{
+    selected_port_name = val;
+    emit portChanged(selected_port_name);
 }

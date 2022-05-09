@@ -23,6 +23,7 @@ public:
     MainWindow(QSqlDatabase *database, QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     void runCmd(const std::string &val);
     void startTask();
@@ -51,12 +52,13 @@ private:
     SerialReader_QT *serialReaderQt;
     SerialOptions *serialOptions;
     QSqlDatabase *database;
-    QString usbPort = "/dev/ttyACM0";
+    QString usbPort;
     std::string start_UUID = "d3b3ecc2-ced7-461a-ac96-04f6d99d9d34";
     std::string end_UUID = "2e11f26e-d155-42d7-be96-d8dec1e6c69e";
     qint8 remaing_stop_calls = 3;
     qint8 progress_value = 0;
     qint8 running_hours = 0;
     void initSerialReader();
+    void setLabelFontBold();
 };
 #endif // MAINWINDOW_H

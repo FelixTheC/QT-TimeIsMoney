@@ -21,10 +21,12 @@ public:
 
 signals:
     void baudrateChanged(qint64 &new_rate);
+    void portChanged(const QString &val);
 
 
 private slots:
     void handle_accepted();
+    void handlePortChanged(const QString &val);
 
 private:
     Ui::SerialOptions *ui;
@@ -33,6 +35,7 @@ private:
 
     qint64 default_baudrate = 9600;
     qint64 user_baudrate = -1;
+    QString selected_port_name = "";
     static constexpr std::initializer_list<qint64> all_rates = {QSerialPort::Baud1200,
                                                                 QSerialPort::Baud2400,
                                                                 QSerialPort::Baud4800,

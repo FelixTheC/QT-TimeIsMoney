@@ -18,12 +18,16 @@ MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     ui->setupUi(this);
     ui->progressBar->setVisible(false);
 
+    usbPort = SerialOptions::getFirstPortName();
+
     this->database = database;
     initSerialReader();
 
     infoTimer = new QTimer(this);
     connect(infoTimer, &QTimer::timeout, this, &MainWindow::taskinfo_changed);
     infoTimer->start(60000);
+
+    setLabelFontBold();
 }
 
 MainWindow::~MainWindow()
@@ -44,7 +48,7 @@ MainWindow::~MainWindow()
 void
 MainWindow::initSerialReader()
 {
-    serialReaderQt = new SerialReader_QT(SerialOptions::getFirstPortName());
+    serialReaderQt = new SerialReader_QT(usbPort);
     connect(serialReaderQt, &SerialReader_QT::serialValueReceived, this, &MainWindow::runCmd);
 
     if (serialOptions != nullptr)
@@ -140,6 +144,17 @@ MainWindow::price_changed(const QString &val)
     }
 }
 
+void MainWindow::setLabelFontBold()
+{
+    auto bold = QFont();
+    bold.setBold(true);
+
+    this->ui->label_currentclient->setFont(bold);
+    this->ui->label_currenttask->setFont(bold);
+    this->ui->label_taskstarted->setFont(bold);
+    this->ui->label_moneyearned->setFont(bold);
+}
+
 void
 MainWindow::taskinfo_changed()
 {
@@ -152,11 +167,13 @@ MainWindow::taskinfo_changed()
     }
     else
     {
+
         this->ui->label_currentclient->setText(currentTask->getClientName());
         this->ui->label_currenttask->setText(currentTask->getTaskName());
         this->ui->label_taskstarted->setText(currentTask->getCreatedAt());
         auto price = currentTask->priceUntilNow();
         this->ui->label_moneyearned->setText(QString::number(price));
+
     }
 
     /*
@@ -264,7 +281,11 @@ MainWindow::on_actionCreate_Invoice_triggered()
 void
 MainWindow::on_actionPort_triggered()
 {
-    serialOptions = new SerialOptions(this);
+    if (serialOptions == nullptr)
+    {
+        serialOptions = new SerialOptions(this);
+        connect(serialOptions, &SerialOptions::portChanged, this, &MainWindow::usbPort_Changed);
+    }
     serialOptions->show();
 }
 
@@ -272,6 +293,9 @@ void
 MainWindow::usbPort_Changed(const QString &val)
 {
     usbPort = val;
+    free(serialReaderQt);
+    serialReaderQt = nullptr;
+    initSerialReader();
 }
 
 void
