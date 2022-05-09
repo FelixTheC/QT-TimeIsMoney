@@ -286,13 +286,20 @@ MainWindow::on_actionCreate_Invoice_triggered()
 void
 MainWindow::on_actionPort_triggered()
 {
-    if (serialOptions == nullptr)
+    if (SerialOptions::getFirstPortName().isEmpty())
     {
-        serialOptions = new SerialOptions(this);
-        connect(serialOptions, &SerialOptions::portChanged,
-                this, &MainWindow::usbPort_Changed);
+        QMessageBox::warning(this, "No Serialdevice", "No Serialdevice connected.");
     }
-    serialOptions->show();
+    else
+    {
+        if (serialOptions == nullptr)
+        {
+            serialOptions = new SerialOptions(this);
+            connect(serialOptions, &SerialOptions::portChanged,
+                    this, &MainWindow::usbPort_Changed);
+        }
+        serialOptions->show();
+    }
 }
 
 void
