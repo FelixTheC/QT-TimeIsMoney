@@ -35,12 +35,12 @@ MainWindow::~MainWindow()
     serialTimer->stop();
     infoTimer->stop();
 
-    free(serialTimer);
-    free(infoTimer);
-    free(serialReaderQt);
-    free(database);
+    delete serialTimer;
+    delete infoTimer;
+    delete serialReaderQt;
+    delete database;
     if (currentTask != nullptr)
-        free(currentTask);
+        delete currentTask;
 
     delete ui;
 }
@@ -49,10 +49,15 @@ void
 MainWindow::initSerialReader()
 {
     serialReaderQt = new SerialReader_QT(usbPort);
-    connect(serialReaderQt, &SerialReader_QT::serialValueReceived, this, &MainWindow::runCmd);
+    if (serialReaderQt->isOpen())
+    {
+        connect(serialReaderQt, &SerialReader_QT::serialValueReceived,
+                this, &MainWindow::runCmd);
 
-    if (serialOptions != nullptr)
-        connect(serialOptions, &SerialOptions::baudrateChanged, serialReaderQt, &SerialReader_QT::changeBaudrate);
+        if (serialOptions != nullptr)
+            connect(serialOptions, &SerialOptions::baudrateChanged,
+                    serialReaderQt, &SerialReader_QT::changeBaudrate);
+    }
 }
 
 void
@@ -284,7 +289,8 @@ MainWindow::on_actionPort_triggered()
     if (serialOptions == nullptr)
     {
         serialOptions = new SerialOptions(this);
-        connect(serialOptions, &SerialOptions::portChanged, this, &MainWindow::usbPort_Changed);
+        connect(serialOptions, &SerialOptions::portChanged,
+                this, &MainWindow::usbPort_Changed);
     }
     serialOptions->show();
 }

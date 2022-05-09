@@ -23,7 +23,10 @@ SerialOptions::~SerialOptions()
 QString
 SerialOptions::getFirstPortName()
 {
-    return QSerialPortInfo::availablePorts()[0].portName();
+    auto available_ports = QSerialPortInfo::availablePorts();
+    if (available_ports.empty())
+        return "";
+    return available_ports[0].portName();
 }
 
 void
@@ -35,14 +38,17 @@ SerialOptions::initPortOptions()
                   [&](const QSerialPortInfo &portInfo){
                      ui->comboBox->addItem(portInfo.portName());
                   });
-    if (selected_port_name.isEmpty())
+    if (!availablePorts.empty())
     {
-        selected_port_name = availablePorts[0].portName();
-    }
-    else
-    {
-        auto text_index = ui->comboBox->findText(selected_port_name);
-        ui->comboBox->setCurrentIndex(text_index);
+        if (selected_port_name.isEmpty())
+        {
+            selected_port_name = availablePorts[0].portName();
+        }
+        else
+        {
+            auto text_index = ui->comboBox->findText(selected_port_name);
+            ui->comboBox->setCurrentIndex(text_index);
+        }
     }
 }
 

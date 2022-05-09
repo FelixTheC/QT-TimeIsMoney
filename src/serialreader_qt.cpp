@@ -29,6 +29,7 @@ SerialReader_QT::initSerialReading()
         serial_port->setBaudRate(QSerialPort::BaudRate::Baud9600);
         serial_port->setParity(QSerialPort::EvenParity);
         serial_port->setDataBits(QSerialPort::Data7);   // receiving ASCII data
+        open = true;
     }
 }
 
@@ -52,4 +53,10 @@ SerialReader_QT::changeBaudrate(qint64 &val)
     {
         serial_port->setBaudRate(val);
     }
+}
+
+bool
+SerialReader_QT::isOpen()
+{
+    return open;
 }
