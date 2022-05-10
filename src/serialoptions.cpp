@@ -24,9 +24,10 @@ QString
 SerialOptions::getFirstPortName()
 {
     auto available_ports = QSerialPortInfo::availablePorts();
-    if (available_ports.empty())
+    if (available_ports.isEmpty())
         return "";
-    return available_ports[0].portName();
+    else
+        return available_ports.first().portName();
 }
 
 void
