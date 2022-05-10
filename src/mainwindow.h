@@ -59,6 +59,7 @@ private:
     qint8 progress_value = 0;
     qint8 running_hours = 0;
     void initSerialReader();
+    void initSerialOptions();
     void setLabelFontBold();
 };
 #endif // MAINWINDOW_H

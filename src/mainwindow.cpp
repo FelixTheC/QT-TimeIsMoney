@@ -18,16 +18,16 @@ MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     ui->setupUi(this);
     ui->progressBar->setVisible(false);
 
-    usbPort = SerialOptions::getFirstPortName();
-
     this->database = database;
-    initSerialReader();
 
     infoTimer = new QTimer(this);
     connect(infoTimer, &QTimer::timeout, this, &MainWindow::taskinfo_changed);
     infoTimer->start(60000);
 
     setLabelFontBold();
+
+    initSerialOptions();
+    initSerialReader();
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +58,15 @@ MainWindow::initSerialReader()
             connect(serialOptions, &SerialOptions::baudrateChanged,
                     serialReaderQt, &SerialReader_QT::changeBaudrate);
     }
+}
+
+void
+MainWindow::initSerialOptions()
+{
+    usbPort = SerialOptions::getFirstPortName();
+    serialOptions = new SerialOptions(this);
+    connect(serialOptions, &SerialOptions::portChanged,
+            this, &MainWindow::usbPort_Changed);
 }
 
 void
@@ -292,12 +301,6 @@ MainWindow::on_actionPort_triggered()
     }
     else
     {
-        if (serialOptions == nullptr)
-        {
-            serialOptions = new SerialOptions(this);
-            connect(serialOptions, &SerialOptions::portChanged,
-                    this, &MainWindow::usbPort_Changed);
-        }
         serialOptions->show();
     }
 }
@@ -306,7 +309,7 @@ void
 MainWindow::usbPort_Changed(const QString &val)
 {
     usbPort = val;
-    free(serialReaderQt);
+    delete serialReaderQt;
     serialReaderQt = nullptr;
     initSerialReader();
 }
