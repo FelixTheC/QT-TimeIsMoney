@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>TimeIsMoney</Name>
+    <Version>1.0.2</Version>
+    <Title>TimeIsMoney Installer</Title>
+    <Publisher>FelixTheC</Publisher>
+    <StartMenuDir>TimeIsMoney</StartMenuDir>
+    <TargetDir>@HomeDir@/InstallationDirectory</TargetDir>
+</Installer>
