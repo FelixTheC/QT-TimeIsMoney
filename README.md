@@ -10,5 +10,3 @@ A desktop version of [PFython/time_is_money](https://github.com/PFython/time_is_
 ![](images/create.png)
 
 ![](images/main_updated.png)
-
-![](images/stm32_f401re.png)

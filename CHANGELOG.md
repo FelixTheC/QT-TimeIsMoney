@@ -1,3 +1,8 @@
+## 1.0.2
+- bugfixes
+- serial reading improvement
+- arduino file
+
 ## 1.0.1
 - remove placeholder from init design
 - QSerialPort/QSerialPortInfo instead of plain serial reading
