@@ -21,6 +21,8 @@ void
 SerialReader_QT::initSerialReading()
 {
     serial_port = new QSerialPort(usb_port);
+    // first close the port, makes it easier to re-open
+    serial_port->close();
 
     connect(serial_port, &QSerialPort::readyRead, this, &SerialReader_QT::read_line);
 
@@ -38,6 +40,8 @@ SerialReader_QT::read_line()
 {
     QByteArray raw_bytes = serial_port->read(64);
     QByteArray bytes {};
+
+    qDebug() << raw_bytes;
 
     if (raw_bytes.size() == 38)
     {
