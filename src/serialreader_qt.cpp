@@ -41,8 +41,6 @@ SerialReader_QT::read_line()
     QByteArray raw_bytes = serial_port->read(64);
     QByteArray bytes {};
 
-    qDebug() << raw_bytes;
-
     if (raw_bytes.size() == 38)
     {
         std::transform(raw_bytes.begin(),
