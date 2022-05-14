@@ -121,6 +121,7 @@ MainWindow::cancelTask()
         taskinfo_changed();
     }
 
+    ui->progressBar->setFormat("0h %vmin");
     ui->progressBar->setVisible(false);
     progress_value = 0;
     running_hours = 0;
