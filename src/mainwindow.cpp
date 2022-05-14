@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTimer>
+#include <QComboBox>
 
 MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     : QMainWindow(parent)
@@ -107,25 +108,21 @@ MainWindow::startTask()
 void
 MainWindow::cancelTask()
 {
-    QString task_name = "";
     if (currentTask != nullptr && !currentTask->getCreatedAt().isEmpty())
     {
         currentTask->stopTask();
-        task_name = currentTask->getTaskName();
+        auto task_name = currentTask->getTaskName();
+        QMessageBox::information(this, "Task stopped.", "Task [" + task_name + "]\nwas stopped");
         delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
     else if (currentTask != nullptr)
     {
-        task_name = currentTask->getTaskName();
         delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
-
-    if (!task_name.isEmpty())
-        QMessageBox::information(this, "Task stopped.", "Task [" + task_name + "]\nwas stopped");
 
     ui->progressBar->setFormat("0h %vmin");
     ui->progressBar->setVisible(false);
@@ -243,6 +240,14 @@ MainWindow::newTaskDialog()
     taskLabel->setText("Task:");
     auto *taskField = new QLineEdit(widget);
     taskField->setText(lastTask);
+    auto *taskSelect = new QComboBox(widget);
+
+    auto *task = new Task(database);
+    auto task_names = task->getUsedTaskNames();
+    taskSelect->addItem("");
+    std::for_each(task_names.begin(),
+                  task_names.end(),
+                  [&taskSelect](auto name){taskSelect->addItem(name);});
 
     auto *priceLabel = new QLabel(widget);
     priceLabel->setText("Price per Hour:");
@@ -258,6 +263,7 @@ MainWindow::newTaskDialog()
     auto *hLayoutTask = new QHBoxLayout();
     hLayoutTask->addWidget(taskLabel);
     hLayoutTask->addWidget(taskField);
+    hLayoutTask->addWidget(taskSelect);
 
     auto *hLayoutPrice = new QHBoxLayout();
     hLayoutPrice->addWidget(priceLabel);
@@ -274,6 +280,8 @@ MainWindow::newTaskDialog()
     connect(buttonBox, &QDialogButtonBox::rejected, widget, &QDialog::reject);
     connect(clientField, &QLineEdit::textEdited, this, &MainWindow::clientname_changed);
     connect(taskField, &QLineEdit::textEdited, this, &MainWindow::taskname_changed);
+    connect(taskSelect, &QComboBox::currentTextChanged, taskField, &QLineEdit::setText);
+    connect(taskSelect, &QComboBox::currentTextChanged, this, &MainWindow::taskname_changed);
     connect(priceField, &QLineEdit::textEdited, this, &MainWindow::price_changed);
     connect(widget, &QDialog::accepted, this, &MainWindow::startTask);
     connect(widget, &QDialog::rejected, this, &MainWindow::cancelTask);
