@@ -107,19 +107,25 @@ MainWindow::startTask()
 void
 MainWindow::cancelTask()
 {
+    QString task_name = "";
     if (currentTask != nullptr && !currentTask->getCreatedAt().isEmpty())
     {
         currentTask->stopTask();
+        task_name = currentTask->getTaskName();
         delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
     else if (currentTask != nullptr)
     {
+        task_name = currentTask->getTaskName();
         delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
+
+    if (!task_name.isEmpty())
+        QMessageBox::information(this, "Task stopped.", "Task [" + task_name + "]\nwas stopped");
 
     ui->progressBar->setFormat("0h %vmin");
     ui->progressBar->setVisible(false);
