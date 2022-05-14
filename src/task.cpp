@@ -135,3 +135,18 @@ Task::getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase
     }
     return false;
 }
+
+QList<QString>
+Task::getUsedTaskNames() noexcept
+{
+    QList<QString> results = {};
+    if (database->isOpen())
+    {
+        QSqlQuery query;
+        query.exec("SELECT DISTINCT(task) from tasks ORDER BY task;");
+
+        while (query.next())
+            results.append(query.value(0).toString());
+    }
+    return results;
+}

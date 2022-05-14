@@ -25,6 +25,7 @@ public:
     QString getClientName() noexcept;
     QString getTaskName() noexcept;
     QString getCreatedAt() noexcept;
+    QList<QString> getUsedTaskNames() noexcept;
 
     static bool getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase *database);
 
