@@ -110,13 +110,13 @@ MainWindow::cancelTask()
     if (currentTask != nullptr && !currentTask->getCreatedAt().isEmpty())
     {
         currentTask->stopTask();
-        free(this->currentTask);
+        delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
     else if (currentTask != nullptr)
     {
-        free(this->currentTask);
+        delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
     }
