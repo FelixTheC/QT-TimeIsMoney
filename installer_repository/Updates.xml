@@ -1,0 +1,21 @@
+<Updates>
+ <ApplicationName>{AnyApplication}</ApplicationName>
+ <ApplicationVersion>1.0.0</ApplicationVersion>
+ <Checksum>true</Checksum>
+ <PackageUpdate>
+  <Name>com.timeismoney.root</Name>
+  <DisplayName>TimeIsMoney</DisplayName>
+  <Description>This will install TimeIsMoney.</Description>
+  <Version>1.0.3</Version>
+  <ReleaseDate>2022-05-13</ReleaseDate>
+  <Default>true</Default>
+  <UpdateFile OS="Any" CompressedSize="165036" UncompressedSize="1205063"/>
+  <DownloadableArchives>content.7z</DownloadableArchives>
+  <Licenses>
+   <License name="MIT License Agreement" file="license.txt"/>
+  </Licenses>
+  <SHA1>ac0dae362f4ef67b70180ee6883ead5e65e71bc6</SHA1>
+ </PackageUpdate>
+ <SHA1>557f967a7d087e433d12fc89ef810f91bebd8b46</SHA1>
+ <MetadataName>2022-05-17-1914_meta.7z</MetadataName>
+</Updates>
