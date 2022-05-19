@@ -112,7 +112,8 @@ MainWindow::cancelTask()
     {
         currentTask->stopTask();
         auto task_name = currentTask->getTaskName();
-        QMessageBox::information(this, "Task stopped.", "Task [" + task_name + "]\nwas stopped");
+        displayInformationMessage(task_name);
+
         delete this->currentTask;
         this->currentTask = nullptr;
         taskinfo_changed();
@@ -367,4 +368,26 @@ MainWindow::on_actionInfo_triggered()
     connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     dialog->setModal(true);
     dialog->show();
+}
+
+void
+MainWindow::informationMessageBoxClosed()
+{
+    msg_box_open = false;
+}
+
+void
+MainWindow::displayInformationMessage(const QString &task_name)
+{
+    if (!msg_box_open)
+    {
+        msgBox = new QMessageBox(QMessageBox::Information,
+                                 "Task stopped.",
+                                 "Task [" + task_name + "]\nwas stopped",
+                                 QMessageBox::Ok| QMessageBox::Cancel,
+                                 this);
+        connect(msgBox, &QMessageBox::accepted, this, &MainWindow::informationMessageBoxClosed);
+        msg_box_open = true;
+        msgBox->show();
+    }
 }
