@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QTextBrowser>
+#include <QMessageBox>
 
 
 QT_BEGIN_NAMESPACE
@@ -42,6 +43,7 @@ private slots:
     void on_actionInfo_triggered();
     void on_startTaskBtn_clicked();
     void on_stopTaskBtn_clicked();
+    void informationMessageBoxClosed();
 
 private:
     Ui::MainWindow *ui;
@@ -61,5 +63,8 @@ private:
     void initSerialReader();
     void initSerialOptions();
     void setLabelFontBold();
+    bool msg_box_open = false;
+    void displayInformationMessage(const QString &task_name);
+    QMessageBox *msgBox;
 };
 #endif // MAINWINDOW_H
