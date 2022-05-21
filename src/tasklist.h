@@ -16,7 +16,7 @@ class TaskList : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TaskList(QSqlDatabase *database, QDialog *parent = nullptr);
+    explicit TaskList(QSqlDatabase *&database, QDialog *parent = nullptr);
 
 protected:
     void resizeEvent(QResizeEvent *);

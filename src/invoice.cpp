@@ -2,7 +2,7 @@
 #include "ui_invoice.h"
 #include <QSqlError>
 
-Invoice::Invoice(QSqlDatabase *database, QWidget *parent) :
+Invoice::Invoice(QSqlDatabase *&database, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Invoice)
 {

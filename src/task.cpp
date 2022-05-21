@@ -140,6 +140,8 @@ QList<QString>
 Task::getUsedTaskNames() noexcept
 {
     QList<QString> results = {};
+    database->open();
+
     if (database->isOpen())
     {
         QSqlQuery query;
@@ -147,6 +149,8 @@ Task::getUsedTaskNames() noexcept
 
         while (query.next())
             results.append(query.value(0).toString());
+
+        database->close();
     }
     return results;
 }
@@ -155,6 +159,8 @@ QList<QString>
 Task::getUsedClientNames() noexcept
 {
     QList<QString> results = {};
+    database->open();
+
     if (database->isOpen())
     {
         QSqlQuery query;
@@ -162,6 +168,8 @@ Task::getUsedClientNames() noexcept
 
         while (query.next())
             results.append(query.value(0).toString());
+
+        database->close();
     }
     return results;
 }

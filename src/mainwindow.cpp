@@ -303,6 +303,7 @@ MainWindow::newTaskDialog()
     widget->show();
 }
 
+
 void
 MainWindow::on_actionOverview_triggered()
 {
