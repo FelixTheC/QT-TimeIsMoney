@@ -150,3 +150,18 @@ Task::getUsedTaskNames() noexcept
     }
     return results;
 }
+
+QList<QString>
+Task::getUsedClientNames() noexcept
+{
+    QList<QString> results = {};
+    if (database->isOpen())
+    {
+        QSqlQuery query;
+        query.exec("SELECT DISTINCT(client) from tasks ORDER BY client;");
+
+        while (query.next())
+            results.append(query.value(0).toString());
+    }
+    return results;
+}
