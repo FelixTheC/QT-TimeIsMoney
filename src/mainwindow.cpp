@@ -222,6 +222,8 @@ MainWindow::taskinfo_changed()
 void
 MainWindow::newTaskDialog()
 {
+    auto *task = new Task(database);
+
     auto *widget = new QDialog(this);
     QString lastClient = "";
     QString lastTask = "";
@@ -236,6 +238,14 @@ MainWindow::newTaskDialog()
     clientLabel->setText("Client:");
     auto *clientField = new QLineEdit(widget);
     clientField->setText(lastClient);
+    auto *clientSelect = new QComboBox(widget);
+
+    auto client_names = task->getUsedClientNames();
+    clientSelect->addItem("");
+    std::for_each(client_names.begin(),
+                  client_names.end(),
+                  [&clientSelect](auto name){clientSelect->addItem(name);});
+
 
     auto *taskLabel = new QLabel(widget);
     taskLabel->setText("Task:");
@@ -243,7 +253,6 @@ MainWindow::newTaskDialog()
     taskField->setText(lastTask);
     auto *taskSelect = new QComboBox(widget);
 
-    auto *task = new Task(database);
     auto task_names = task->getUsedTaskNames();
     taskSelect->addItem("");
     std::for_each(task_names.begin(),
@@ -260,6 +269,7 @@ MainWindow::newTaskDialog()
     auto *hLayoutClient = new QHBoxLayout();
     hLayoutClient->addWidget(clientLabel);
     hLayoutClient->addWidget(clientField);
+    hLayoutClient->addWidget(clientSelect);
 
     auto *hLayoutTask = new QHBoxLayout();
     hLayoutTask->addWidget(taskLabel);
@@ -279,6 +289,8 @@ MainWindow::newTaskDialog()
     connect(buttonBox, &QDialogButtonBox::accepted, widget, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &MainWindow::cancelTask);
     connect(buttonBox, &QDialogButtonBox::rejected, widget, &QDialog::reject);
+    connect(clientSelect, &QComboBox::currentTextChanged, clientField, &QLineEdit::setText);
+    connect(clientSelect, &QComboBox::currentTextChanged, this, &MainWindow::clientname_changed);
     connect(clientField, &QLineEdit::textEdited, this, &MainWindow::clientname_changed);
     connect(taskField, &QLineEdit::textEdited, this, &MainWindow::taskname_changed);
     connect(taskSelect, &QComboBox::currentTextChanged, taskField, &QLineEdit::setText);
