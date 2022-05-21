@@ -23,7 +23,7 @@ class Invoice : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Invoice(QSqlDatabase *database, QWidget *parent = nullptr);
+    explicit Invoice(QSqlDatabase *&database, QWidget *parent = nullptr);
     ~Invoice();
 
 private slots:

@@ -1,7 +1,7 @@
 #include "tasklist.h"
 
 
-TaskList::TaskList(QSqlDatabase *database, QDialog *parent)
+TaskList::TaskList(QSqlDatabase *&database, QDialog *parent)
     : QDialog{parent}
 {
     db = database;
@@ -64,6 +64,8 @@ TaskList::resizeEvent(QResizeEvent *)
 void
 TaskList::initModel()
 {
+    db->open();
+
     model = new QSqlTableModel(nullptr, *db);
     model->setTable("tasks");
     model->setSort(6, Qt::DescendingOrder);
@@ -74,7 +76,9 @@ TaskList::initModel()
     model->setHeaderData(4, Qt::Horizontal, QObject::tr("Probono"));
     model->setHeaderData(5, Qt::Horizontal, QObject::tr("Start"));
     model->setHeaderData(6, Qt::Horizontal, QObject::tr("End"));
+
     model->select();
+    db->close();
 }
 
 void
