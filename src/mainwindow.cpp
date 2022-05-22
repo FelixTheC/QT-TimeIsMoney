@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "tasklist.h"
 #include "ui_mainwindow.h"
+#include <stdio.h>
 
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -11,6 +12,7 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QComboBox>
+#include <updater.h>
 
 MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QSqlDatabase *database, QWidget *parent)
 
     initSerialOptions();
     initSerialReader();
+
 }
 
 MainWindow::~MainWindow()
@@ -404,3 +407,9 @@ MainWindow::displayInformationMessage(const QString &task_name)
         msgBox->show();
     }
 }
+
+void MainWindow::on_actionCheck_for_Updates_triggered()
+{
+   new Updater();
+}
+
