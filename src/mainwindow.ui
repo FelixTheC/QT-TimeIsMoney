@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>470</width>
-    <height>300</height>
+    <width>498</width>
+    <height>278</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -195,7 +195,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>470</width>
+     <width>498</width>
      <height>22</height>
     </rect>
    </property>
@@ -220,6 +220,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionInfo"/>
+    <addaction name="actionCheck_for_Updates"/>
    </widget>
    <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
@@ -243,6 +244,11 @@
   <action name="actionInfo">
    <property name="text">
     <string>Info</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_Updates">
+   <property name="text">
+    <string>Check for Updates</string>
    </property>
   </action>
  </widget>

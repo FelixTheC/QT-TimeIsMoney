@@ -45,6 +45,8 @@ private slots:
     void on_stopTaskBtn_clicked();
     void informationMessageBoxClosed();
 
+    void on_actionCheck_for_Updates_triggered();
+
 private:
     Ui::MainWindow *ui;
     void newTaskDialog();

@@ -20,7 +20,8 @@ SOURCES += \
     serialreader_qt.cpp \
     task.cpp \
     taskdb.cpp \
-    tasklist.cpp
+    tasklist.cpp \
+    updater.cpp
 
 HEADERS += \
     invoice.h \
@@ -29,7 +30,8 @@ HEADERS += \
     serialreader_qt.h \
     task.h \
     taskdb.h \
-    tasklist.h
+    tasklist.h \
+    updater.h
 
 FORMS += \
     invoice.ui \
