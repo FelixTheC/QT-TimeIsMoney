@@ -57,7 +57,8 @@ Updater::display() noexcept
                              msg,
                              QMessageBox::Ok | QMessageBox::Cancel);
 
-    connect(msgBox, &QMessageBox::accepted, this, &Updater::_runUpdate);
+    if (update_available)
+        connect(msgBox, &QMessageBox::accepted, this, &Updater::_runUpdate);
     msgBox->show();
 }
 
