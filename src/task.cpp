@@ -102,6 +102,8 @@ Task::getCreatedAt() noexcept
 
 bool Task::writeTaskToDb()
 {
+    database->open();
+
     if (database->isOpen())
     {
         QSqlQuery query;
@@ -114,7 +116,11 @@ bool Task::writeTaskToDb()
         query.bindValue(":created", createdAt);
         query.bindValue(":closed", closedAt);
 
-        return query.exec();
+        auto result = query.exec();
+
+        database->close();
+
+        return result;
     }
     return false;
 }
@@ -122,6 +128,8 @@ bool Task::writeTaskToDb()
 bool
 Task::getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase *database)
 {
+    database->open();
+
     if (database->isOpen())
     {
 
@@ -131,6 +139,9 @@ Task::getLastRecord(QString &client, QString &task, QString &price, QSqlDatabase
         client = query.value(1).toString();
         task = query.value(2).toString();
         price = QString::number(query.value(3).toFloat());
+
+        database->close();
+
         return result;
     }
     return false;
