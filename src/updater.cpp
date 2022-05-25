@@ -40,6 +40,7 @@ Updater::runUpdate() noexcept
 {
     QStringList args;
     args.append("--updater");
+
     process.startDetached(programm, args);
 }
 
