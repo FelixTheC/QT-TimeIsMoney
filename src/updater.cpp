@@ -72,8 +72,6 @@ Updater::_runUpdate()
 void
 Updater::processFinished(int exit_code, QProcess::ExitStatus exit_status)
 {
-    qDebug() << exit_code << exit_status;
-
     auto std_out = process.readAllStandardOutput();
     QString std_out_str = QString::fromLocal8Bit(std_out);
     update_available = !std_out_str.contains("Warning");
