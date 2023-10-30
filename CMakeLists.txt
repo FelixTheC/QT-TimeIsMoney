@@ -15,11 +15,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort)
 find_package(Qt6 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort)
 
-add_subdirectory(TimeIsMoneyDB_CMake)
-add_subdirectory(TimeIsMoneyExternalApi_CMake)
-add_subdirectory(TimeIsMoneyInvoice_CMake)
-add_subdirectory(TimeIsMoneySerial_CMake)
-add_subdirectory(TimeIsMoneyTask_CMake)
+add_subdirectory(TimeIsMoney-TimeIsMoneyDB_CMake)
+add_subdirectory(TimeIsMoney-TimeIsMoneyExternalApi_CMake)
+add_subdirectory(TimeIsMoney-TimeIsMoneyInvoice_CMake)
+add_subdirectory(TimeIsMoney-TimeIsMoneySerial_CMake)
+add_subdirectory(TimeIsMoney-TimeIsMoneyTask_CMake)
 
 add_executable(TimeIsMoney_CMake
         main.cpp

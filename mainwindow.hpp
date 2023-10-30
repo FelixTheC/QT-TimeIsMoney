@@ -8,12 +8,12 @@
 #include <QSharedPointer>
 #include <QSqlDatabase>
 
-#include "../TimeIsMoneyInvoice_CMake/invoice.hpp"
-#include "../TimeIsMoneyTask_CMake/task.hpp"
-#include "../TimeIsMoneyTask_CMake/tasklist.hpp"
-#include "../TimeIsMoneySerial_CMake/serialoptions.hpp"
-#include "../TimeIsMoneySerial_CMake/serialreader_qt.hpp"
-#include "TimeIsMoneyExternalApi_CMake/externalapi.hpp"
+#include "../TimeIsMoney-TimeIsMoneyInvoice_CMake/invoice.hpp"
+#include "../TimeIsMoney-TimeIsMoneyTask_CMake/task.hpp"
+#include "../TimeIsMoney-TimeIsMoneyTask_CMake/tasklist.hpp"
+#include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialoptions.hpp"
+#include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialreader_qt.hpp"
+#include "../TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi.hpp"
 
 
 namespace Ui

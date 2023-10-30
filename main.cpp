@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "TimeIsMoneyDB_CMake/include/taskdb.hpp"
+#include "TimeIsMoney-TimeIsMoneyDB_CMake/include/taskdb.hpp"
 
 #include "mainwindow.hpp"
 
