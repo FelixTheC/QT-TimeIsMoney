@@ -13,6 +13,7 @@
 #include "../TimeIsMoneyTask_CMake/tasklist.hpp"
 #include "../TimeIsMoneySerial_CMake/serialoptions.hpp"
 #include "../TimeIsMoneySerial_CMake/serialreader_qt.hpp"
+#include "TimeIsMoneyExternalApi_CMake/externalapi.hpp"
 
 
 namespace Ui
@@ -51,6 +52,7 @@ private slots:
     void informationMessageBoxClosed();
 
     void on_actionCheck_for_Updates_triggered();
+    void actionAdd_API_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -63,6 +65,7 @@ private:
     QSharedPointer<SerialOptions> serialOptions;
     QSharedPointer<SerialReader_QT> serialReaderQt;
     QSharedPointer<QSqlDatabase> database;
+    QSharedPointer<ExternalApi> externalApi;
     QString usbPort;
     std::string start_UUID = "d3b3ecc2-ced7-461a-ac96-04f6d99d9d34";
     std::string end_UUID = "2e11f26e-d155-42d7-be96-d8dec1e6c69e";

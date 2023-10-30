@@ -34,6 +34,9 @@ MainWindow::MainWindow(QSharedPointer<QSqlDatabase> &&database, QWidget *parent)
 
     taskList = QSharedPointer<TaskList>(new TaskList(database));
     invoice = QSharedPointer<Invoice>(new Invoice(database, this));
+    externalApi = QSharedPointer<ExternalApi>(new ExternalApi(database, this));
+    
+    connect(ui->actionAdd_API, SIGNAL(triggered()), this, SLOT(actionAdd_API_triggered()));
 }
 
 MainWindow::~MainWindow()
@@ -401,5 +404,10 @@ MainWindow::displayInformationMessage(const QString &task_name)
 void MainWindow::on_actionCheck_for_Updates_triggered()
 {
    new Updater();
+}
+
+void MainWindow::actionAdd_API_triggered()
+{
+    externalApi->show();
 }
 
