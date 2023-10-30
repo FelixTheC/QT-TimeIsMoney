@@ -1,0 +1,11 @@
+﻿Idea 	     = Peter F
+Development  = FelixTheC
+
+
+Shortcuts:
+Start-Button = Alt + 's'
+End-Button   = Alt + 'e'
+
+
+©️2023
+

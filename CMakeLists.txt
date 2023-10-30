@@ -26,6 +26,7 @@ add_executable(TimeIsMoney_CMake
         mainwindow.cpp
         config.cpp
         updater.cpp
+        resources.qrc
 )
 
 target_link_libraries(TimeIsMoney_CMake
