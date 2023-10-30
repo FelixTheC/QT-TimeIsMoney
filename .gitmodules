@@ -1,15 +1,20 @@
 [submodule "TimeIsMoney-TimeIsMoneyDB_CMake"]
 	path = TimeIsMoney-TimeIsMoneyDB_CMake
 	url = https://FelixTheC:<Token>@github.com/FelixTheC/TimeIsMoney-TimeIsMoneyDB_CMake
+	branch = main
 [submodule "TimeIsMoney-TimeIsMoneyExternalApi_CMake"]
 	path = TimeIsMoney-TimeIsMoneyExternalApi_CMake
 	url = https://FelixTheC:<Token>@github.com/FelixTheC/TimeIsMoney-TimeIsMoneyExternalApi_CMake
+	branch = main
 [submodule "TimeIsMoney-TimeIsMoneyInvoice_CMake"]
 	path = TimeIsMoney-TimeIsMoneyInvoice_CMake
 	url = https://FelixTheC:<Token>@github.com/FelixTheC/TimeIsMoney-TimeIsMoneyInvoice_CMake
+	branch = main
 [submodule "TimeIsMoney-TimeIsMoneySerial_CMake"]
 	path = TimeIsMoney-TimeIsMoneySerial_CMake
 	url = https://FelixTheC:<Token>@github.com/FelixTheC/TimeIsMoney-TimeIsMoneySerial_CMake
+	branch = main
 [submodule "TimeIsMoney-TimeIsMoneyTask_CMake"]
 	path = TimeIsMoney-TimeIsMoneyTask_CMake
 	url = https://FelixTheC:<Token>@github.com/FelixTheC/TimeIsMoney-TimeIsMoneyTask_CMake
+	branch = main
