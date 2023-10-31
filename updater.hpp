@@ -4,7 +4,6 @@
 #include <QApplication>
 #include <QDialog>
 #include <QDir>
-#include <QDebug>
 #include <QFile>
 #include <QHBoxLayout>
 #include <QLabel>

@@ -1,12 +1,13 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
 #include <QCloseEvent>
-#include <QTextBrowser>
+#include <QMainWindow>
 #include <QMessageBox>
+#include <QNetworkReply>
 #include <QSharedPointer>
 #include <QSqlDatabase>
+#include <QTextBrowser>
 
 #include "../TimeIsMoney-TimeIsMoneyInvoice_CMake/invoice.hpp"
 #include "../TimeIsMoney-TimeIsMoneyTask_CMake/task.hpp"
@@ -14,6 +15,7 @@
 #include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialoptions.hpp"
 #include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialreader_qt.hpp"
 #include "../TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi.hpp"
+#include "../TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi_send.hpp"
 
 
 namespace Ui
@@ -53,6 +55,8 @@ private slots:
 
     void on_actionCheck_for_Updates_triggered();
     void actionAdd_API_triggered();
+    
+    void handleExternalApiResponse(QNetworkReply *externalApiReply);
 
 private:
     Ui::MainWindow *ui;
@@ -66,17 +70,22 @@ private:
     QSharedPointer<SerialReader_QT> serialReaderQt;
     QSharedPointer<QSqlDatabase> database;
     QSharedPointer<ExternalApi> externalApi;
+    QSharedPointer<QNetworkAccessManager> externalApiManager;
+    QSharedPointer<QNetworkReply> externalApiReply;
     QString usbPort;
+    
     std::string start_UUID = "d3b3ecc2-ced7-461a-ac96-04f6d99d9d34";
     std::string end_UUID = "2e11f26e-d155-42d7-be96-d8dec1e6c69e";
     qint8 remaing_stop_calls = 3;
     qint8 progress_value = 0;
     qint8 running_hours = 0;
+    
     void initSerialReader();
     void initSerialOptions();
     void setLabelFontBold();
     bool msg_box_open = false;
     void displayInformationMessage(const QString &task_name);
-    QMessageBox *msgBox{};
+    
+    QSharedPointer<QMessageBox> msgBox{};
 };
 #endif // MAINWINDOW_HPP

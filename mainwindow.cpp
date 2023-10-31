@@ -1,3 +1,4 @@
+#include "ui_mainwindow.h"
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QDialog>
@@ -5,12 +6,10 @@
 #include <QFile>
 #include <QInputDialog>
 #include <QLabel>
-#include <QPushButton>
 #include <QSqlDatabase>
 #include <QTimer>
 
 #include "mainwindow.hpp"
-#include "ui_mainwindow.h"
 #include "updater.hpp"
 
 
@@ -35,8 +34,10 @@ MainWindow::MainWindow(QSharedPointer<QSqlDatabase> &&database, QWidget *parent)
     taskList = QSharedPointer<TaskList>(new TaskList(database));
     invoice = QSharedPointer<Invoice>(new Invoice(database, this));
     externalApi = QSharedPointer<ExternalApi>(new ExternalApi(database, this));
+    externalApiManager = QSharedPointer<QNetworkAccessManager>(new QNetworkAccessManager());
     
     connect(ui->actionAdd_API, SIGNAL(triggered()), this, SLOT(actionAdd_API_triggered()));
+    connect(externalApiManager.data(), &QNetworkAccessManager::finished, this, &MainWindow::handleExternalApiResponse);
 }
 
 MainWindow::~MainWindow()
@@ -53,12 +54,18 @@ MainWindow::initSerialReader()
     serialReaderQt = QSharedPointer<SerialReader_QT>(new SerialReader_QT(usbPort));
     if (serialReaderQt->isOpen())
     {
-        connect(serialReaderQt.data(), &SerialReader_QT::serialValueReceived,
-                this, &MainWindow::runCmd);
+        connect(serialReaderQt.data(),
+                &SerialReader_QT::serialValueReceived,
+                this,
+                &MainWindow::runCmd);
 
-        if (serialOptions != nullptr)
-            connect(serialOptions.data(), &SerialOptions::baudrateChanged,
-                    serialReaderQt.data(), &SerialReader_QT::changeBaudrate);
+        if (serialOptions)
+        {
+            connect(serialOptions.data(),
+                    &SerialOptions::baudrateChanged,
+                    serialReaderQt.data(),
+                    &SerialReader_QT::changeBaudrate);
+        }
     }
 }
 
@@ -104,6 +111,8 @@ MainWindow::startTask()
     if (this->currentTask)
     {
         this->currentTask->startTask();
+        send_cmd(this->database, externalApiManager, SendTopic::Start);
+        
         ui->progressBar->setVisible(true);
         progress_value = -1;
         taskinfo_changed();
@@ -116,6 +125,8 @@ MainWindow::cancelTask()
     if (currentTask && !currentTask->getCreatedAt().isEmpty())
     {
         currentTask->stopTask();
+        send_cmd(this->database, externalApiManager, SendTopic::Stop);
+        
         auto task_name = currentTask->getTaskName();
         displayInformationMessage(task_name);
 
@@ -390,12 +401,12 @@ MainWindow::displayInformationMessage(const QString &task_name)
 {
     if (!msg_box_open)
     {
-        msgBox = new QMessageBox(QMessageBox::Information,
+        msgBox = QSharedPointer<QMessageBox>(new QMessageBox(QMessageBox::Information,
                                  "Task stopped.",
                                  "Task [" + task_name + "]\nwas stopped",
                                  QMessageBox::Ok| QMessageBox::Cancel,
-                                 this);
-        connect(msgBox, &QMessageBox::accepted, this, &MainWindow::informationMessageBoxClosed);
+                                 this));
+        connect(msgBox.data(), &QMessageBox::accepted, this, &MainWindow::informationMessageBoxClosed);
         msg_box_open = true;
         msgBox->show();
     }
@@ -409,5 +420,26 @@ void MainWindow::on_actionCheck_for_Updates_triggered()
 void MainWindow::actionAdd_API_triggered()
 {
     externalApi->show();
+}
+
+void MainWindow::handleExternalApiResponse(QNetworkReply *networkReply)
+{
+    auto statusCode = networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    if (statusCode.isValid())
+    {
+        auto status = statusCode.toInt();
+        
+        if (status == 200)
+        {
+            auto json_doc = QJsonDocument::fromJson(networkReply->readAll());
+            
+            msgBox = QSharedPointer<QMessageBox>(new QMessageBox(QMessageBox::Warning,
+                                                                 "Invalid response",
+                                                                 json_doc.toJson(QJsonDocument::Compact),
+                                                                 QMessageBox::Ok| QMessageBox::Cancel,
+                                                                 this));
+            msgBox->show();
+        }
+    }
 }
 

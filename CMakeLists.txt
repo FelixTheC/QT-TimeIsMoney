@@ -12,8 +12,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_PREFIX_PATH "/home/felix/Qt/6.5.0/gcc_64")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort)
-find_package(Qt6 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Sql Widgets PrintSupport SerialPort Network)
 
 add_subdirectory(TimeIsMoney-TimeIsMoneyDB_CMake)
 add_subdirectory(TimeIsMoney-TimeIsMoneyExternalApi_CMake)
@@ -35,6 +35,7 @@ target_link_libraries(TimeIsMoney_CMake
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::PrintSupport
     Qt${QT_VERSION_MAJOR}::SerialPort
+    Qt${QT_VERSION_MAJOR}::Network
     TimeIsMoneyDB_CMake
     TimeIsMoneyExternalApi_CMake
     TimeIsMoneyInvoice_CMake
