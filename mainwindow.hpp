@@ -9,13 +9,13 @@
 #include <QSqlDatabase>
 #include <QTextBrowser>
 
-#include "../TimeIsMoney-TimeIsMoneyInvoice_CMake/invoice.hpp"
-#include "../TimeIsMoney-TimeIsMoneyTask_CMake/task.hpp"
-#include "../TimeIsMoney-TimeIsMoneyTask_CMake/tasklist.hpp"
-#include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialoptions.hpp"
-#include "../TimeIsMoney-TimeIsMoneySerial_CMake/serialreader_qt.hpp"
-#include "../TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi.hpp"
-#include "../TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi_send.hpp"
+#include "TimeIsMoney-TimeIsMoneyInvoice_CMake/invoice.hpp"
+#include "TimeIsMoney-TimeIsMoneyTask_CMake/task.hpp"
+#include "TimeIsMoney-TimeIsMoneyTask_CMake/tasklist.hpp"
+#include "TimeIsMoney-TimeIsMoneySerial_CMake/serialoptions.hpp"
+#include "TimeIsMoney-TimeIsMoneySerial_CMake/serialreader_qt.hpp"
+#include "TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi.hpp"
+#include "TimeIsMoney-TimeIsMoneyExternalApi_CMake/externalapi_send.hpp"
 
 
 namespace Ui
@@ -42,7 +42,6 @@ private slots:
     void price_changed(const QString &val);
     void taskinfo_changed();
     void closeEvent(QCloseEvent *event) override;
-    void usbPort_Changed(const QString &val);
     void usbPort_ChangeDialogClosed();
 
     void on_actionOverview_triggered();

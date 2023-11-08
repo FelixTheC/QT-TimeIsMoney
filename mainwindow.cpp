@@ -65,6 +65,11 @@ MainWindow::initSerialReader()
                     &SerialOptions::baudrateChanged,
                     serialReaderQt.data(),
                     &SerialReader_QT::changeBaudrate);
+
+            connect(serialOptions.data(),
+                    &SerialOptions::portChanged,
+                    serialReaderQt.data(),
+                    &SerialReader_QT::changePort);
         }
     }
 }
@@ -74,8 +79,6 @@ MainWindow::initSerialOptions()
 {
     usbPort = SerialOptions::getFirstPortName();
     serialOptions = QSharedPointer<SerialOptions>(new SerialOptions(this));
-    connect(serialOptions.data(), &SerialOptions::portChanged,
-            this, &MainWindow::usbPort_Changed);
 }
 
 void
@@ -341,13 +344,6 @@ MainWindow::on_actionPort_triggered()
     {
         serialOptions->show();
     }
-}
-
-void
-MainWindow::usbPort_Changed(const QString &val)
-{
-    usbPort = val;
-    initSerialReader();
 }
 
 void
