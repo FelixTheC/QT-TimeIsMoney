@@ -24,7 +24,6 @@ MainWindow::MainWindow(QSharedPointer<QSqlDatabase> &&database, QWidget *parent)
 
     infoTimer = QSharedPointer<QTimer>(new QTimer(this));
     connect(infoTimer.data(), &QTimer::timeout, this, &MainWindow::taskinfo_changed);
-    infoTimer->start(60000);
 
     setLabelFontBold();
 
@@ -78,7 +77,7 @@ void
 MainWindow::initSerialOptions()
 {
     usbPort = SerialOptions::getFirstPortName();
-    serialOptions = QSharedPointer<SerialOptions>(new SerialOptions(this));
+    serialOptions = QSharedPointer<SerialOptions>(new SerialOptions(this->database, this));
 }
 
 void
@@ -92,8 +91,12 @@ MainWindow::runCmd(const std::string &val)
             {
                 currentTask = QSharedPointer<Task>(new Task(database));
             }
-
-            newTaskDialog();
+            
+            if (!is_task_window_open)
+            {
+                is_task_window_open = true;
+                newTaskDialog();
+            }
         }
 
         if (val.find(end_UUID) != std::string::npos)
@@ -102,6 +105,7 @@ MainWindow::runCmd(const std::string &val)
             if (remaing_stop_calls <=0)
             {
                 cancelTask();
+                is_task_window_open = false;
                 remaing_stop_calls = 3;
             }
         }
@@ -111,14 +115,30 @@ MainWindow::runCmd(const std::string &val)
 void
 MainWindow::startTask()
 {
-    if (this->currentTask)
+    if (this->currentTask && this->is_paused_)
     {
         this->currentTask->startTask();
         send_cmd(this->database, externalApiManager, SendTopic::Start);
-        
         ui->progressBar->setVisible(true);
-        progress_value = -1;
+        
+        // set one value back as it will be increased in taskinfo_changed
+        --progress_value;
+
+        infoTimer->start(60000);
         taskinfo_changed();
+        
+        this->is_paused_ = false;
+        ui->startTaskBtn->setText("Pause");
+    }
+    else if (this->currentTask && this->currentTask->is_running())
+    {
+        this->currentTask->stopTask();
+        this->infoTimer->stop();
+        send_cmd(this->database, externalApiManager, SendTopic::Pause);
+        
+        this->is_paused_ = true;
+        ui->progressBar->setFormat("Paused");
+        ui->startTaskBtn->setText("Start");
     }
 }
 
@@ -134,6 +154,8 @@ MainWindow::cancelTask()
         displayInformationMessage(task_name);
 
         taskinfo_changed();
+        ui->startTaskBtn->setText("Start");
+        this->is_paused_ = false;
     }
     else if (!(currentTask))
     {
@@ -201,7 +223,6 @@ MainWindow::taskinfo_changed()
     }
     else
     {
-
         this->ui->label_currentclient->setText(currentTask->getClientName());
         this->ui->label_currenttask->setText(currentTask->getTaskName());
         this->ui->label_taskstarted->setText(currentTask->getCreatedAt());
@@ -221,6 +242,10 @@ MainWindow::taskinfo_changed()
     if (ui->progressBar->isVisible())
     {
         ++progress_value;
+        if (is_paused_)
+        {
+            ui->progressBar->setFormat("0h %vmin");
+        }
         if (progress_value > 60)
         {
             progress_value = 0;
@@ -313,8 +338,15 @@ MainWindow::newTaskDialog()
     connect(widget, &QDialog::accepted, this, &MainWindow::startTask);
     connect(widget, &QDialog::rejected, this, &MainWindow::cancelTask);
 
-    widget->setModal(true);
-    widget->show();
+    if (is_paused_)
+    {
+        widget->setModal(true);
+        widget->show();
+    }
+    else
+    {
+        startTask();
+    }
 }
 
 
@@ -421,11 +453,12 @@ void MainWindow::actionAdd_API_triggered()
 void MainWindow::handleExternalApiResponse(QNetworkReply *networkReply)
 {
     auto statusCode = networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    
     if (statusCode.isValid())
     {
         auto status = statusCode.toInt();
         
-        if (status == 200)
+        if (status != 200)
         {
             auto json_doc = QJsonDocument::fromJson(networkReply->readAll());
             

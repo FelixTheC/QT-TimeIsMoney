@@ -72,6 +72,7 @@ private:
     QSharedPointer<QNetworkAccessManager> externalApiManager;
     QSharedPointer<QNetworkReply> externalApiReply;
     QString usbPort;
+    QString progress_bar = "0h %vmin";
     
     std::string start_UUID = "d3b3ecc2-ced7-461a-ac96-04f6d99d9d34";
     std::string end_UUID = "2e11f26e-d155-42d7-be96-d8dec1e6c69e";
@@ -79,10 +80,13 @@ private:
     qint8 progress_value = 0;
     qint8 running_hours = 0;
     
+    bool msg_box_open = false;
+    bool is_paused_ = true;
+    bool is_task_window_open = false;
+    
     void initSerialReader();
     void initSerialOptions();
     void setLabelFontBold();
-    bool msg_box_open = false;
     void displayInformationMessage(const QString &task_name);
     
     QSharedPointer<QMessageBox> msgBox{};
